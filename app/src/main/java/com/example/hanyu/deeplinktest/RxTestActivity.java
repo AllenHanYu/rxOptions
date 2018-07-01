@@ -321,6 +321,7 @@ public class RxTestActivity extends AppCompatActivity {
 
     /**
      * interval 操作符用于间隔时间执行某个操作，其接受三个参数，分别是第一次发送延迟，间隔时间，时间单位。
+     * 采用 interval 操作符实现心跳间隔任务
      */
     private void intervalOption() {
         Log.d(TAG, "当前的时间是");
@@ -498,6 +499,8 @@ public class RxTestActivity extends AppCompatActivity {
      * FlatMap 是一个很有趣的东西，我坚信你在实际开发中会经常用到。它可以把一个发射器 Observable 通过某种方法转换为多个 Observables，
      * 然后再把这些分散的 Observables装进一个单一的发射器 Observable。
      * 但有个需要注意的是，flatMap 并不能保证事件的顺序，如果需要保证，需要用到我们下面要讲的 ConcatMap。
+     * <p>
+     * flatMap 实现多个网络请求依次依赖
      */
     private void flatMapOption() {
         Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -547,6 +550,8 @@ public class RxTestActivity extends AppCompatActivity {
      * 对于单一的把两个发射器连接成一个发射器，虽然 zip 不能完成，
      * 但我们还是可以自力更生，官方提供的 concat 让我们的问题得到了完美解决
      * concat 可以做到不交错的发射两个甚至多个 Observable 的发射事件，并且只有前一个 Observable 终止(onComplete) 后才会订阅下一个 Observable
+     * <p>
+     * 采用 concat 操作符先读取缓存再通过网络请求获取数据
      */
     private void concatOption() {
         Observable.concat(Observable.just(1, 2, 3), Observable.just(4, 5, 6))
@@ -576,6 +581,8 @@ public class RxTestActivity extends AppCompatActivity {
     /**
      * zip 专用于合并事件，该合并不是连接（连接操作符后面会说），
      * 而是两两配对，也就意味着，最终配对出的 Observable 发射事件数目只和少的那个相同。
+     * <p>
+     * 善用 zip 操作符，实现多个接口数据共同更新 UI
      */
     private void zipOption() {
         Observable<Integer> integerObservable = Observable.create(new ObservableOnSubscribe<Integer>() {
