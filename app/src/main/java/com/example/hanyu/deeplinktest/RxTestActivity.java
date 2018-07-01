@@ -25,6 +25,7 @@ import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
@@ -36,6 +37,7 @@ public class RxTestActivity extends AppCompatActivity {
 
     public final String TAG = RxTestActivity.this.getClass().getName() + "====>HanYu";
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,86 @@ public class RxTestActivity extends AppCompatActivity {
 //        mergeOption();
 //        reduceOption();
 //        scanOption();
-        backpressure();
+//        backpressure();
+//        compositeOption();
+
+        startWithOption();
+
+
+        Observable.just(1, 2, 3).delay(new Function<Integer, ObservableSource<Integer>>() {
+            @Override
+            public ObservableSource<Integer> apply(Integer integer) throws Exception {
+                return null;
+            }
+        }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+
+            }
+        });
+
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void startWithOption() {
+
+        Observable.just(1, 2, 3)
+                .startWith(new Observable<Integer>() {
+                    @Override
+                    protected void subscribeActual(Observer<? super Integer> observer) {
+                        Log.d(TAG, "startWidth ====>");
+                    }
+                }).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "The result ===>" + integer);
+            }
+        });
+    }
+
+    /**
+     * CompositeDisposable
+     * <p>
+     * 批量解除订阅关系
+     */
+
+    private void compositeOption() {
+
+
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                emitter.onNext(1);
+                emitter.onNext(2);
+            }
+        }).subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                compositeDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.d(TAG, "The result is ====>" + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+        //解除订阅关系
+        compositeDisposable.clear();
 
     }
 

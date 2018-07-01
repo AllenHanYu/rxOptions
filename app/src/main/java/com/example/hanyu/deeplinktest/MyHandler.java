@@ -5,6 +5,10 @@ import android.os.Message;
 
 import java.lang.ref.WeakReference;
 
+
+/**
+ * 解决Handler内存泄漏的问题
+ */
 public class MyHandler extends Handler {
 
     private WeakReference<MainActivity> mWeakReference;

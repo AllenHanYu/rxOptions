@@ -1,4 +1,4 @@
-package com.example.hanyu.deeplinktest;
+package com.example.hanyu.deeplinktest.weight;
 
 import android.annotation.TargetApi;
 import android.content.Context;

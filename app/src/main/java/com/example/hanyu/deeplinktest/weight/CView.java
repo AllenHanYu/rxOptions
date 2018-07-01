@@ -1,4 +1,4 @@
-package com.example.hanyu.deeplinktest;
+package com.example.hanyu.deeplinktest.weight;
 
 import android.content.Context;
 import android.os.Build;
